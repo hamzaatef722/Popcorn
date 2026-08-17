@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream text-ink font-body antialiased transition-colors duration-300;
+  }
+
+  body.dark {
+    @apply bg-void text-cream;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+  }
+
+  ::selection {
+    @apply bg-neon text-void;
+  }
+
+  :focus-visible {
+    outline: 2px solid theme("colors.neon.DEFAULT");
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Signature element: a perforated "film strip" divider — a row of small
+     circular sprocket holes, evoking a physical reel, used to separate
+     sections instead of a plain <hr>. */
+  .film-divider {
+    @apply relative h-px w-full my-10 opacity-40;
+    background-image: radial-gradient(
+      circle,
+      currentColor 1.5px,
+      transparent 1.5px
+    );
+    background-size: 16px 100%;
+    background-repeat: repeat-x;
+  }
+
+  /* Ticket-stub card treatment for media cards: a dashed "tear" edge on
+     hover, echoing a cinema ticket rather than a generic poster tile. */
+  .ticket-card {
+    @apply relative overflow-hidden rounded-xl bg-velvet-light/60;
+  }
+
+  .ticket-card::after {
+    content: "";
+    @apply absolute inset-x-0 bottom-0 h-0 opacity-0 transition-all duration-300;
+    border-top: 2px dashed theme("colors.neon.DEFAULT");
+  }
+
+  .ticket-card:hover::after {
+    @apply h-2 opacity-100;
+  }
+
+  .btn-neon {
+    @apply inline-flex items-center gap-2 rounded-full bg-neon px-5 py-2.5
+      font-body font-semibold text-void transition-transform duration-200
+      hover:scale-[1.03] hover:shadow-neon active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-full border border-mist/40
+      px-5 py-2.5 font-body font-semibold text-current transition-colors
+      duration-200 hover:border-neon hover:text-neon;
+  }
+}
