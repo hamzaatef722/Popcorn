@@ -7,7 +7,7 @@ function WatchedItem({ item }) {
 
   return (
     <Link to={`/title/${item.media_type}/${item.id}`} className="block">
-      <div className="flex flex-col text-center sm:text-left sm:flex-row items-center gap-2 rounded-xl bg-velvet-light/40 p-4">
+      <div className="flex flex-col bg-slate-900 dark:bg-slate-900 text-white text-center sm:text-left mb-3 sm:flex-row items-center gap-2 rounded-xl  p-4">
         {posterUrl ? (
           <img
             src={posterUrl}
