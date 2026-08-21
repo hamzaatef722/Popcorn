@@ -134,12 +134,12 @@ function DetailsPage() {
 
           <p className="mt-5 leading-relaxed text-current/90">{item.overview}</p>
 
-          <div className="mt-6 flex flex-wrap items-center gap-3">
+          <div className="mt-6 flex flex-wrap items-center gap-3 ">
             <button
               onClick={handleWatchlistToggle}
               className={inWatchlist ? "btn-neon" : "btn-ghost"}
             >
-              <FiBookmark size={16} />
+              <FiBookmark size={16} className={inWatchlist ? `fill-black` : ""} />
               {inWatchlist ? "In watchlist" : "Add to watchlist"}
             </button>
 
