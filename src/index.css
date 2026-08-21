@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light-mode accent values. The original neon/mist tones read great on
+       a near-black background but wash out almost to invisibility on the
+       cream page (contrast ~1.7:1 for neon, ~3:1 for mist) — that's the
+       "everything looks too pale together" problem in light mode. These
+       are darker, more saturated siblings of the same hues, tuned to clear
+       WCAG AA (4.5:1+) against --color-cream. */
+    --mist: 92 97 117; /* #5C6175 */
+    --neon: 8 113 140; /* #08718C */
+    --neon-dim: 6 89 110; /* #05596E */
+  }
+
+  .dark {
+    /* Original dark-mode values — unchanged. */
+    --mist: 138 143 163; /* #8A8FA3 */
+    --neon: 62 209 242; /* #3ED1F2 */
+    --neon-dim: 42 168 196; /* #2AA8C4 */
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream text-ink font-body antialiased transition-colors duration-300;
+  }
+
+  body.dark {
+    @apply bg-void text-cream;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display tracking-tight;
+  }
+
+  ::selection {
+    @apply bg-neon text-void;
+  }
+
+  :focus-visible {
+    outline: 2px solid theme("colors.neon.DEFAULT");
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Pins --neon/--mist to their dark-mode values no matter which site
+     theme is active. Use on surfaces that are deliberately always dark —
+     the Hero's cinema backdrop, a ticket-style poster card — so accents
+     stay glowy/legible on them even when the rest of the page is in
+     light mode. */
+  .reel-stage {
+    --mist: 138 143 163;
+    --neon: 62 209 242;
+    --neon-dim: 42 168 196;
+  }
+
+  /* Signature element: a perforated "film strip" divider — a row of small
+     circular sprocket holes, evoking a physical reel, used to separate
+     sections instead of a plain <hr>. */
+  .film-divider {
+    @apply relative h-px w-full my-10 opacity-40;
+    background-image: radial-gradient(
+      circle,
+      currentColor 1.5px,
+      transparent 1.5px
+    );
+    background-size: 16px 100%;
+    background-repeat: repeat-x;
+  }
+
+  /* Ticket-stub card treatment for media cards: a dashed "tear" edge on
+     hover, echoing a cinema ticket rather than a generic poster tile. */
+  .ticket-card {
+    @apply relative overflow-hidden rounded-xl bg-velvet-light/60;
+  }
+
+  .ticket-card::after {
+    content: "";
+    @apply absolute inset-x-0 bottom-0 h-0 opacity-0 transition-all duration-300;
+    border-top: 2px dashed theme("colors.neon.DEFAULT");
+  }
+
+  .ticket-card:hover::after {
+    @apply h-2 opacity-100;
+  }
+
+  .btn-neon {
+    @apply inline-flex items-center gap-2 rounded-full bg-neon px-5 py-2.5
+      font-body font-semibold text-void transition-transform duration-200
+      hover:scale-[1.03] hover:shadow-neon active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-full border border-mist/40
+      px-5 py-2.5 font-body font-semibold text-current transition-colors
+      duration-200 hover:border-neon hover:text-neon;
+  }
+
+  /* History-list card: a horizontal ticket stub, same family as
+     .ticket-card but theme-adaptive (paper in light mode, velvet in dark)
+     instead of a background that's hardcoded dark in both. A dashed
+     "tear" divider sets the rating apart, echoing a ticket's perforation. */
+  .history-card {
+    @apply relative flex flex-col items-center gap-3 rounded-xl border
+      border-mist/15 bg-paper p-4 text-center transition-colors duration-200
+      hover:border-neon/50 dark:border-white/5 dark:bg-velvet-light/60
+      sm:flex-row sm:gap-4 sm:text-left;
+  }
+
+  .history-card__rating {
+    @apply flex shrink-0 items-center gap-3 pt-1 sm:border-l sm:border-dashed
+      sm:border-mist/30 sm:pl-4 sm:pt-0;
+  }
+}
