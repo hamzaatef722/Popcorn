@@ -1,5 +1,6 @@
+import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { FiFilm, FiHome, FiCompass, FiStar, FiUser } from "react-icons/fi";
 import ThemeToggle from "../features/theme/ThemeToggle";
 
@@ -10,9 +11,60 @@ const links = [
   { to: "/profile", label: "Profile", icon: FiUser },
 ];
 
+// Below this breakpoint the mobile icon row is shown (matches the `md:hidden`
+// / `md:flex` split already used for the two nav layouts).
+const MOBILE_QUERY = "(max-width: 767px)";
+// Ignore scroll jitter under this many pixels (rubber-banding, trackpads).
+const SCROLL_DELTA_THRESHOLD = 6;
+// Never hide the bar while still this close to the top.
+const TOP_OFFSET = 96;
+
 function Navbar() {
+  const [hidden, setHidden] = useState(false);
+  const lastScrollY = useRef(0);
+  const shouldReduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(MOBILE_QUERY);
+    lastScrollY.current = window.scrollY;
+
+    function handleScroll() {
+      if (!mediaQuery.matches) return;
+
+      const currentY = window.scrollY;
+      const delta = currentY - lastScrollY.current;
+
+      if (currentY < TOP_OFFSET) {
+        setHidden(false);
+      } else if (delta > SCROLL_DELTA_THRESHOLD) {
+        setHidden(true); // scrolling down — get out of the way
+      } else if (delta < -SCROLL_DELTA_THRESHOLD) {
+        setHidden(false); // scrolling up — come right back, iOS-style
+      }
+
+      lastScrollY.current = currentY;
+    }
+
+    // Desktop never hides the bar — if the viewport crosses back over the
+    // breakpoint (resize, orientation change), make sure it's visible.
+    function handleMediaChange() {
+      if (!mediaQuery.matches) setHidden(false);
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    mediaQuery.addEventListener("change", handleMediaChange);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      mediaQuery.removeEventListener("change", handleMediaChange);
+    };
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-mist/10 bg-cream/80 backdrop-blur-md dark:bg-void/80">
+    <motion.header
+      animate={{ y: hidden ? "-100%" : "0%" }}
+      transition={{ duration: shouldReduceMotion ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] }}
+      className="sticky top-0 z-50 border-b border-mist/10 bg-cream/80 backdrop-blur-md dark:bg-void/80"
+    >
       <div className="mx-auto flex max-w-7xl items-center gap-6 px-3 py-4">
         <NavLink
           to="/"
@@ -74,7 +126,7 @@ function Navbar() {
           </NavLink>
         ))}
       </nav>
-    </header>
+    </motion.header>
   );
 }
 
