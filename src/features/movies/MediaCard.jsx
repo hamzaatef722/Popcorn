@@ -40,7 +40,7 @@ function MediaCard({ item }) {
     <motion.div
       whileHover={{ y: -6 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className="ticket-card reel-stage group w-40 shrink-0 md:w-48"
+      className="ticket-card group w-40 shrink-0 md:w-48"
     >
       <Link to={`/title/${item.media_type}/${item.id}`} className="block">
         <div className="relative aspect-[2/3] w-full overflow-hidden bg-velvet">
@@ -87,9 +87,9 @@ function MediaCard({ item }) {
           </div>
         </div>
 
-        <div className="p-2.5 text-cream">
+        <div className="p-2.5 bg-slate-900 dark:bg-slate-900 text-white ">
           <h3 className="truncate font-body text-sm font-semibold">{title}</h3>
-          <p className="font-mono text-xs text-mist">
+          <p className="font-mono text-xs dark:text-mist">
             {year} · {item.media_type === "tv" ? "Series" : "Film"}
           </p>
         </div>
