@@ -139,7 +139,10 @@ function DetailsPage() {
               onClick={handleWatchlistToggle}
               className={inWatchlist ? "btn-neon" : "btn-ghost"}
             >
-              <FiBookmark size={16} />
+              <FiBookmark
+                size={16}
+                className={inWatchlist ? `fill-black` : ""}
+              />
               {inWatchlist ? "In watchlist" : "Add to watchlist"}
             </button>
 
